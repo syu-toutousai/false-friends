@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>中日 偽友詞 ・ 認知のズレ図鑑</title>
+<style>
+:root{--bg:#f5f7fb;--card:#fff;--ink:#1c2333;--sub:#5b6478;--line:#e4e7f0;
+--acc:#b02a37;--acc2:#fdecee;--cn:#0f766e;--cnbg:#e6fffa;--jp:#7a4ff7;--jpbg:#f1edff;
+--gold:#b8860b;--ok:#188a52}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:"PingFang SC","Hiragino Sans GB","Noto Sans CJK SC","Microsoft YaHei",sans-serif;
+background:var(--bg);color:var(--ink);line-height:1.8;padding-bottom:60px}
+header{background:linear-gradient(135deg,#7f1d1d,#b02a37);color:#fff;padding:34px 20px 28px}
+header h1{font-size:26px}
+header .kana{opacity:.93;font-size:14px;margin-top:6px}
+header .tags span{display:inline-block;background:rgba(255,255,255,.22);border-radius:99px;
+padding:2px 10px;font-size:12px;margin:10px 6px 0 0}
+.wrap{max-width:900px;margin:0 auto;padding:0 16px}
+main{margin-top:-14px}
+.card{background:var(--card);border-radius:16px;padding:20px;margin:14px 0;
+box-shadow:0 2px 10px rgba(30,40,90,.06)}
+h2{font-size:18px;margin-bottom:10px}
+.group h2{font-size:15px;letter-spacing:1px;color:var(--sub);font-weight:700;
+border-left:4px solid var(--acc);padding-left:10px;margin:26px 0 4px}
+p{font-size:14px}
+.lead{font-size:14px;color:var(--sub)}
+.axes{background:#f7f8fc;border-radius:12px;padding:12px 14px;font-size:13.5px;margin:10px 0}
+.axes div{margin:4px 0}
+table{width:100%;border-collapse:collapse;font-size:13.5px;margin-top:8px}
+th,td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+th{background:#f7f8fc;font-weight:700}
+.pair{border-top:5px solid var(--acc)}
+.pair h2{display:flex;flex-wrap:wrap;align-items:baseline;gap:10px;font-size:20px}
+.pair h2 .rd{font-size:12.5px;color:var(--sub);font-weight:400}
+.axis{display:inline-block;background:var(--acc2);color:var(--acc);border-radius:99px;
+padding:1px 10px;font-size:11.5px;font-weight:700}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:12px 0}
+@media (max-width:700px){.two{grid-template-columns:1fr}}
+.side{border-radius:14px;padding:12px 14px}
+.side h3{font-size:14px;margin-bottom:4px}
+.side.cn{background:var(--cnbg)}
+.side.cn h3{color:var(--cn)}
+.side.jp{background:var(--jpbg)}
+.side.jp h3{color:var(--jp)}
+.side .ex{font-size:12.5px;color:var(--sub);margin-top:6px;line-height:1.7}
+.shift{background:#fffaf0;border-left:5px solid var(--gold);border-radius:12px;
+padding:10px 14px;font-size:13.5px;margin:10px 0}
+.theater{background:#f7f9fd;border-radius:12px;padding:12px 14px;font-size:13.5px;margin:10px 0}
+.theater .say{display:block;margin:5px 0}
+.theater .bad{color:var(--acc);font-weight:700}
+.theater .good{color:var(--ok);font-weight:700}
+.deep{margin:10px 0;font-size:13.8px}
+.deep b{color:var(--jp)}
+.hits{margin-top:10px;padding-top:10px;border-top:1px dashed var(--line);font-size:12.8px;color:var(--sub)}
+.hits .barrow{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin:6px 0}
+.hits .yr{font-size:11px;color:var(--sub);width:34px}
+.hits .bar{height:10px;background:linear-gradient(90deg,#b02a37,#e07a84);border-radius:6px;min-width:3px}
+.hits a.ref{display:inline-block;background:#f1f3f8;border-radius:7px;padding:1px 7px;margin:2px 4px 2px 0;
+font-size:11.5px;color:var(--sub);text-decoration:none}
+.hits a.ref:hover{color:var(--acc);background:var(--acc2)}
+.qbox .q{font-size:16px;margin:10px 0;font-family:"Hiragino Mincho ProN","Yu Mincho",serif}
+.opt{display:inline-block;margin:4px 8px 4px 0;padding:9px 16px;border-radius:12px;border:2px solid var(--line);
+background:#fff;cursor:pointer;font-size:14px;font-weight:600}
+.opt:hover:not(:disabled){border-color:var(--acc)}
+.opt.right{border-color:var(--ok);background:#e9f7ef}
+.opt.wrong{border-color:var(--acc);background:var(--acc2)}
+.opt:disabled{cursor:default;opacity:.92}
+.fb{margin-top:10px;padding:11px 13px;border-radius:10px;font-size:13.5px;display:none}
+.fb.ok{background:#e9f7ef;color:var(--ok);display:block}
+.fb.ng{background:var(--acc2);color:var(--acc);display:block}
+.score{font-weight:700;color:var(--acc)}
+.warn{background:#fffaf0;border-left:5px solid var(--gold);border-radius:12px;padding:12px 14px;
+font-size:13.5px;margin-top:10px}
+.links{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:10px;margin-top:8px}
+.links a{display:block;background:#fafbff;border:1px solid var(--line);border-radius:12px;
+padding:12px 14px;text-decoration:none;color:var(--ink)}
+.links a:hover{border-color:var(--acc)}
+.links b{display:block;font-size:14.5px}
+.links span{font-size:12.5px;color:var(--sub)}
+footer{text-align:center;color:var(--sub);font-size:12.5px;margin-top:26px;line-height:1.9}
+</style>
+</head>
+<body>
+<header><div class="wrap">
+<h1>🎭 中日 偽友詞（False Friends）・認知のズレ図鑑</h1>
+<div class="kana">ぎじゆうし —— 不是「意思不同」，而是「意义的坐标系不同」</div>
+<div class="tags"><span>偽友詞</span><span>認知言語学</span><span>社会座標</span><span>公私・自他</span><span>N1 真題命中</span><span>誤用劇場</span></div>
+</div></header>
+
+<main class="wrap">
+
+<div class="card">
+<h2>📖 この図鑑の使い方——「浅い偽友」と「深い偽友」</h2>
+<p>「手紙＝厕纸」「娘＝女儿」式的差异只是<b>词汇表事故</b>，查一次字典就能修好。本图鉴收录的是另一种——
+<b>字形相同、字面意思看似一致，但底层认知坐标系不同</b>的词。它们的差异不在「词义」，而在：</p>
+<div class="axes">
+<div><b>① 座標系の付け替え</b>：同じ漢字が別の軸に置かれる（道徳軸 → 社会役割軸：「立場」）</div>
+<div><b>② 公私の分割</b>：一語が担っていた二つの領域を、日本語は別語に分ける（対象 ⇄ 相手）</div>
+<div><b>③ 極性の反転</b>：褒貶・方向が逆になる（「真面目」＝真の顔［貶］ → 真剣［褒］）</div>
+<div><b>④ 比喩の日常化</b>：身体・宗教語が日常語に降りてくる（皮肉・邪魔・我慢）</div>
+</div>
+<p class="lead">各词条四层结构：<b>中文核心义／日语核心义</b> → <b>认知漂移</b> → <b>误用剧场</b> → <b>认知解读</b>；
+末尾附 <b>N1 真题命中</b>（仅回次・問題・题号元数据与加密站深链，不转载真题原文）。</p>
+</div>
+
+<div class="group"><h2>A. 社会と役割——「場」が意味を決める</h2></div>
+
+<div class="card pair" id="p-tachiba">
+<h2>① 立場 <span class="rd">たちば</span><span class="axis">座標系：道徳軸→社会役割軸</span></h2>
+<div class="two">
+<div class="side cn"><h3>中文「立场」</h3><p>对错、阵营、原则上的态度。严肃、对抗性强，涉及「敌与我」。</p>
+<div class="ex">坚定立场・政治立场・站稳立场</div></div>
+<div class="side jp"><h3>日本語「立場」</h3><p>社会身份、职位、处境——由「場」与「役割」决定的<b>行为边界</b>。</p>
+<div class="ex">立場上できない／立場がない／相手の立場に立つ／苦しい立場</div></div>
+</div>
+<div class="shift">認知漂移：<b>「私は何を信じるか」（内面の原則）→「私はどこにいるか」（社会の位置）</b>。
+中文的立场是心里的事，日语的立場是场里的事。</div>
+<div class="theater">
+<span class="say">日本同僚：<span class="bad">「私もそうしてあげたいのは山々ですが、立場上、できないんですよ。」</span></span>
+<span class="say">中文脑直译：<span class="bad">「从我的（政治）立场出发，我不能这么做」</span>——误以为对方在原则对抗。</span>
+<span class="say">实际含义：<span class="good">「限于我的职位/公司规章，实在无能为力。」</span></span>
+<span class="say">再如：<span class="bad">「そんなことをされたら、私の立場がなくなります。」</span>＝<span class="good">「会让我下不来台/没脸见人」，不是「失去立场」。</span></span>
+</div>
+<div class="deep">🧠 <b>认知解读</b>：日本社会以「場（ば）」组织秩序，人的属性由所属与角色临时赋予。所以「立場」是可移动的——
+你在课上是学生、在店里是客人、在家族里是长男；换场即换立場。中文的立场相反：越坚持越固定，是人格的锚。
+<b>说日语时先问「我此刻在哪个場、扮演什么役割」，比问「我赞成什么」更优先。</b></div>
+<div class="hits" data-w="立場"></div>
+</div>
+
+<div class="card pair" id="p-enryo">
+<h2>② 遠慮 <span class="rd">えんりょ</span><span class="axis">座標系：時間軸→対人空間軸</span></h2>
+<div class="two">
+<div class="side cn"><h3>中文「远虑」</h3><p>长远的考虑与谋划（多用于书面成语）。</p>
+<div class="ex">人无远虑，必有近忧・深谋远虑</div></div>
+<div class="side jp"><h3>日本語「遠慮」</h3><p>客气、顾虑、自制——<b>不越过对方边界</b>的克制。</p>
+<div class="ex">遠慮なくどうぞ／ご遠慮ください／遠慮がち／遠慮はいりません</div></div>
+</div>
+<div class="shift">認知漂移：<b>时间上的「想得远」→ 空间上的「退一步」</b>。日语的遠慮不是聪明，而是礼貌性的自我抑制。</div>
+<div class="theater">
+<span class="say">中文脑：<span class="bad">「我们要有远虑」</span> → 若译成「遠慮を持とう」，日语听来莫名其妙。</span>
+<span class="say">正确：<span class="good">「長期的な視野を持つ／先を見越す」</span>。</span>
+<span class="say">而 <span class="bad">「遠慮なく食べてください」</span> 不是「要深谋远虑地吃」，而是 <span class="good">「别客气，尽管吃」</span>。</span>
+</div>
+<div class="deep">🧠 <b>认知解读</b>：「深謀遠慮」这四字熟语日语也在用——那是<b>汉籍共用层</b>；但日常口语的「遠慮」已完全移到人际轴：
+它是「不给对方添负担」的行为规范。同一个词的文雅层与日常层分居两岸，这正是伪友最迷惑人的地方。</div>
+<div class="hits" data-w="遠慮"></div>
+</div>
+
+<div class="card pair" id="p-gaman">
+<h2>③ 我慢 <span class="rd">がまん</span><span class="axis">極性：自我膨張→自我抑制</span></h2>
+<div class="two">
+<div class="side cn"><h3>中文「我慢」</h3><p>古典/佛教语：自负、傲慢（「我慢自矜」）。现代中文已罕用。</p>
+<div class="ex">我慢贡高（佛典）</div></div>
+<div class="side jp"><h3>日本語「我慢」</h3><p>忍耐、忍受、克制。</p>
+<div class="ex">我慢強い／我慢できない／痛みを我慢する</div></div>
+</div>
+<div class="shift">認知漂移：来自佛教「我慢（自我膨胀的慢心）」——繁体中文保留贬义，日语却滑向<b>反方向的自我抑制</b>。
+同一词源，两个文明各取一端。</div>
+<div class="theater">
+<span class="say">中文脑读到「我慢」：<span class="bad">以为在说「我很傲慢」</span>。</span>
+<span class="say">日语实际：<span class="good">「我慢してください」＝请忍一忍</span>。</span>
+<span class="say">注意同形反义：<span class="good">我慢強い＝有耐性</span>，而中文的「我慢」若按古义是<b>最不「忍耐」的状态</b>。</span>
+</div>
+<div class="deep">🧠 <b>认知解读</b>：佛教语汇在东亚两地的落地路径不同。中国把它留在经典与传统成语层；日本把它拽进日常，
+并在语义上完成了<b>从「慢」到「忍」的翻转</b>（慢心即苦，忍苦即修行）。遇到佛教来源词，别用现代中文直觉硬读——
+先看它在日语里被日常化成了什么动作。</div>
+<div class="hits" data-w="我慢"></div>
+</div>
+
+<div class="card pair" id="p-meiwaku">
+<h2>④ 迷惑 <span class="rd">めいわく</span><span class="axis">方向：内面の困惑→対人的負担</span></h2>
+<div class="two">
+<div class="side cn"><h3>中文「迷惑」</h3><p>心里困惑、被搞糊涂（描述<b>自己的认知状态</b>）。</p>
+<div class="ex">我很迷惑・迷惑不解</div></div>
+<div class="side jp"><h3>日本語「迷惑」</h3><p>添麻烦、打扰（描述<b>给他人造成的负担</b>）。</p>
+<div class="ex">迷惑をかける／ご迷惑をおかけしました／迷惑メール／迷惑行為</div></div>
+</div>
+<div class="shift">認知漂移：<b>向内（我糊涂了）→ 向外（我麻烦到别人了）</b>。中文是认知词，日语是行为伦理词。</div>
+<div class="theater">
+<span class="say">中文脑想表达「我糊涂了」：<span class="bad">「私は迷惑しています」</span>——日语听来像 <span class="bad">「我在给人添麻烦／我被打扰了」</span>，完全串味。</span>
+<span class="say">正解：<span class="good">「私は混乱しています／戸惑っています」</span>。</span>
+<span class="say">日语的名句：<span class="good">「ご迷惑をおかけして申し訳ありません」＝给您添麻烦了，非常抱歉</span>。</span>
+</div>
+<div class="deep">🧠 <b>认知解读</b>：日本伦理的核心单位不是「我的心情」，而是「我在这张关系网里造成了什么」。所以「迷惑」的宾语永远是<b>他人</b>。
+这也是「不给人添麻烦」文化的关键词。学它的时候请连同「迷惑をかける」整个框架一起记，而不是当成中文的情绪词。</div>
+<div class="hits" data-w="迷惑"></div>
+</div>
+
+<div class="group"><h2>B. 目標と公私——「相手」と「対象」の分割</h2></div>
+
+<div class="card pair" id="p-taishou">
+<h2>⑤ 対象 <span class="rd">たいしょう</span><span class="axis">公私：親密圏→客観目標</span></h2>
+<div class="two">
+<div class="side cn"><h3>中文「对象」</h3><p>①恋爱/结婚伴侣（日常核心义）②行为作用的目标。</p>
+<div class="ex">找对象・带对象回家・研究对象</div></div>
+<div class="side jp"><h3>日本語「対象」</h3><p><b>只有</b>客观目标：研究、政策、统计、商品作用的人群/范围。冰冷、行政、学术。</p>
+<div class="ex">18歳以上を対象とした調査／課税対象／研究対象／対象外</div></div>
+</div>
+<div class="shift">認知漂移：<b>日语把「人际的相手」与「客观的対象」彻底分居两词</b>——公私不混。</div>
+<div class="theater">
+<span class="say"><span class="bad">❌「彼女は私の対象です。」</span></span>
+<span class="say">日语母语者感受：<span class="bad">像在说「她是我的实验/调查/犯罪目标」，极其古怪惊悚。</span></span>
+<span class="say">正解：恋人 → <span class="good">「恋人・彼氏／彼女・パートナー」</span>；结婚对象 → <span class="good">「結婚相手」</span>；
+谈判对手 → <span class="good">「相手」</span>。</span>
+</div>
+<div class="deep">🧠 <b>认知解读</b>：中文的「对象」把亲密关系放进「目标物」的框架（对象化），这本身是一种认知隐喻；
+日语则用「相手」保留人际的相互性（<b>相＝互相，手＝交手</b>），用「対象」承接一切非人格的目标。
+记住这条分界线，半个伪友雷区就安全了：<b>人会「相手」，物才「対象」</b>。</div>
+<div class="hits" data-w="対象"></div>
+</div>
+
+<div class="card pair" id="p-shitsumon">
+<h2>⑥ 質問 <span class="rd">しつもん</span><span class="axis">極性：対抗的な追及→中性的な情報要求</span></h2>
+<div class="two">
+<div class="side cn"><h3>中文「质问」</h3><p>带着问责、追责的严厉提问（对抗性强）。</p>
+<div class="ex">提出质问・质问对方</div></div>
+<div class="side jp"><h3>日本語「質問」</h3><p>中性提问——为了获取信息，不含责难。</p>
+<div class="ex">質問があります／質問を質問で返す／質疑応答</div></div>
+</div>
+<div class="shift">認知漂移：<b>责任追及 → 信息请求</b>。日语把攻击性的追问交给「追及する・詰める・問い詰める」。</div>
+<div class="theater">
+<span class="say">日本课堂上 <span class="good">「何か質問はありますか」</span>＝<span class="good">「有什么问题吗」</span>，绝无找茬之意。</span>
+<span class="say">若想说中文的「质问」：<span class="good">「責任を追及する／なぜかと詰め寄る」</span>，用 質問 就弱化了锋芒。</span>
+</div>
+<div class="deep">🧠 <b>认知解读</b>：同字词在两国的「力度刻度」不同。中文质问天然带立场与道德压力；日语的質問被剥掉了攻击性，
+是教室与会议的基础设施。学一个词时，除了意思，还要记住它的<b>攻击性刻度</b>——伪友常发生在刻度而非词义上。</div>
+<div class="hits" data-w="質問"></div>
+</div>
+
+<div class="card pair" id="p-youi">
+<h2>⑦ 用意 <span class="rd">ようい</span><span class="axis">方向：内なる意図→外なる準備</span></h2>
+<div class="two">
+<div class="side cn"><h3>中文「用意」</h3><p>意图、目的（「用意何在」）。</p>
+<div class="ex">用意不明・别有用心</div></div>
+<div class="side jp"><h3>日本語「用意」</h3><p>准备、备好（动作已朝外）。也有「用意周到」的说法。</p>
+<div class="ex">夕食を用意する／ご用意ください／用意周到</div></div>
+</div>
+<div class="shift">認知漂移：<b>心里的打算 → 手边的准备</b>。日语的「意図」（意图）与「準備」（准备）各司其职，用意取了后者。</div>
+<div class="theater">
+<span class="say">中文脑把「用意」当意图：<span class="bad">「あなたの用意は何ですか」</span>——不通。</span>
+<span class="say">正解：意图 → <span class="good">意図</span>；准备 → <span class="good">用意・準備</span>。</span>
+</div>
+<div class="deep">🧠 <b>认知解读</b>：中文的「意」偏内向（心之所向），日语把这个字外向化成了「备好可用」。
+类似的「意」系词还有警惕区（例：意気込む、心得る）——遇到「意」字，先判断日语把它放在心侧还是手侧。</div>
+<div class="hits" data-w="用意"></div>
+</div>
+
+<div class="group"><h2>C. 評価と極性——褒貶が入れ替わる</h2></div>
+
+<div class="card pair" id="p-majime">
+<h2>⑧ 真面目 <span class="rd">まじめ</span><span class="axis">極性反転：本音の暴露→勤勉の称賛</span></h2>
+<div class="two">
+<div class="side cn"><h3>中文「真面目」</h3><p>真实面目、本来样子——多为贬义（伪装被揭穿）。</p>
+<div class="ex">露出真面目・他的真面目很可怕</div></div>
+<div class="side jp"><h3>日本語「真面目」</h3><p>认真、踏实、正经——标准<b>褒义词</b>。</p>
+<div class="ex">真面目な人／真面目に働く／真面目な話</div></div>
+</div>
+<div class="shift">認知漂移：字面「真之面目」在中文指向<b>假面之下的真相</b>（危险、负面）；日语把「面目」转向<b>态度</b>，
+凝固为「不马虎」。同字形，评价极性相反。</div>
+<div class="theater">
+<span class="say">中国人夸日本同事：<span class="bad">「彼は真面目だ」</span>想说？——<span class="good">其实这句在日语里就是「他很认真」，是夸。</span></span>
+<span class="say">反过来，中文想说「他终于露出真面目（丑恶）」：<span class="good">「本性を現した／素顔を見せた」</span>。</span>
+</div>
+<div class="deep">🧠 <b>认知解读</b>：伪友中最危险的一类是「同形、反褒贬」。它不改变所指，而改变<b>说话人的立场</b>：
+中文的真面目是审判视角（揭穿），日语的真面目是评价视角（认可）。听错时，不是听不懂词，而是<b>听反了态度</b>。</div>
+<div class="hits" data-w="真面目"></div>
+</div>
+
+<div class="card pair" id="p-tokui">
+<h2>⑨ 得意 <span class="rd">とくい</span><span class="axis">評価軸：態度の膨らみ→能力と取引</span></h2>
+<div class="two">
+<div class="side cn"><h3>中文「得意」</h3><p>自满、得意忘形（偏贬）。</p>
+<div class="ex">得意洋洋・得意忘形</div></div>
+<div class="side jp"><h3>日本語「得意」</h3><p>擅长（得意分野）；也是商业词——<b>得意先＝客户</b>；得意げ＝得意（这层偏贬）。</p>
+<div class="ex">得意な科目／お得意様／得意先回り</div></div>
+</div>
+<div class="shift">認知漂移：中文停在「情绪の膨らみ」；日语把重心移到<b>能力评价与商业关系</b>，只在「得意げ・得意になる」时保留贬义残影。</div>
+<div class="theater">
+<span class="say">中文脑听到「得意」：<span class="bad">以为在说某人自大</span>。</span>
+<span class="say">日语实际：<span class="good">「数学が得意です」＝我擅长数学</span>；<span class="good">「お得意様」＝老主顾</span>。</span>
+</div>
+<div class="deep">🧠 <b>认知解读</b>：注意日语对「得意」做了<b>分层保留</b>：能力义中性、商业义抬高、贬义只留给「得意げ」。
+这与「真面目」的极性反转不同——它是把中文的单一贬义<b>拆分到不同语法槽</b>里。学词要学到「槽位」层面。</div>
+<div class="hits" data-w="得意"></div>
+</div>
+
+<div class="card pair" id="p-kentou">
+<h2>⑩ 検討 <span class="rd">けんとう</span><span class="axis">座標系：自己批判の倫理軸→可否検証の実務軸</span></h2>
+<div class="two">
+<div class="side cn"><h3>中文「检讨」</h3><p>自我批评、认错反省（负面、道德）。</p>
+<div class="ex">写检讨・检讨错误</div></div>
+<div class="side jp"><h3>日本語「検討」</h3><p>研究讨论、评估可行性（中性、商务）。</p>
+<div class="ex">検討します／再検討／検討中／ご検討ください</div></div>
+</div>
+<div class="shift">認知漂移：<b>「有错要认」（道德清算）→「事情要研究」（可行性评估）</b>。日语的自省另有「反省」「自省」。</div>
+<div class="theater">
+<span class="say">日本上司说 <span class="good">「検討します」</span>——不是要写检讨，而是 <span class="good">「我们会研究一下」</span>（有时是礼貌的缓拒）。</span>
+<span class="say">中文脑说 <span class="bad">「自己検討」</span>：日语听来像「自己研究一下」，完全没有「认错」重量。</span>
+</div>
+<div class="deep">🧠 <b>认知解读</b>：中文把「讨」字用在道德清算上（讨伐、检讨）；日语把它用在事务审查上。
+判断一字系词的方向键是<b>看它配套的动词对象</b>：検討の対象は企画・案・方針；反省の対象は自分自身。对象决定词格，词格决定文化。</div>
+<div class="hits" data-w="検討"></div>
+</div>
+
+<div class="group"><h2>D. 身体と比喩——宗教・身体語の日常化</h2></div>
+
+<div class="card pair" id="p-hiniku">
+<h2>⑪ 皮肉 <span class="rd">ひにく</span><span class="axis">比喩：身体→言語行為</span></h2>
+<div class="two">
+<div class="side cn"><h3>中文「皮肉」</h3><p>字面：皮和肉（身体）。</p>
+<div class="ex">皮肉之苦・皮肉伤</div></div>
+<div class="side jp"><h3>日本語「皮肉」</h3><p>讽刺、挖苦（言语行为）。</p>
+<div class="ex">皮肉を言う／皮肉な結果／皮肉にも</div></div>
+</div>
+<div class="shift">認知漂移：身体词隐喻化为「刺人的话」。一说是来自禅语「皮肉骨髄」（得皮・得肉・得骨・得髄，指悟道的深浅层次），
+「皮肉」= 表面浅层 → 转指表面似的恭维或刻薄话——<b>此说为诸说之一</b>，但足见身体词的字义地图在日本如何再编码。</div>
+<div class="theater">
+<span class="say">中文脑：<span class="bad">「皮肉を言う」＝说肉麻话？说身体部位？</span></span>
+<span class="say">日语实际：<span class="good">「说风凉话、挖苦」</span>；<span class="good">「皮肉にも」＝讽刺的是……</span></span>
+</div>
+<div class="deep">🧠 <b>认知解读</b>：中文保留字面身体义（皮肉之苦），日语把它推到了隐喻端（言语的刺痛）。
+身体词是伪友高发区，因为隐喻是无穷的，而字面只有一副。凡是身体部位参与的词，查词时都该多看一眼。</div>
+<div class="hits" data-w="皮肉"></div>
+</div>
+
+<div class="card pair" id="p-jama">
+<h2>⑫ 邪魔 <span class="rd">じゃま</span><span class="axis">脱・超自然：悪魔→日常の妨げ</span></h2>
+<div class="two">
+<div class="side cn"><h3>中文「邪魔」</h3><p>邪恶的魔物、妖魔（宗教/奇幻语域）。</p>
+<div class="ex">驱除邪魔・邪魔外道</div></div>
+<div class="side jp"><h3>日本語「邪魔」</h3><p>妨碍、打扰（日常最高频之一）。</p>
+<div class="ex">邪魔しないで／お邪魔します／邪魔になる／邪魔くさい</div></div>
+</div>
+<div class="shift">認知漂移：<b>超自然の悪 → 日常の邪魔くささ</b>。日语把「魔」赶出了神坛，塞进了日常关系。</div>
+<div class="theater">
+<span class="say">中文脑听到「邪魔」：<span class="bad">以为在驱魔</span>。</span>
+<span class="say">日语实际：<span class="good">「お邪魔します」＝打扰了（进门寒暄）；「邪魔になる」＝碍事。</span></span>
+</div>
+<div class="deep">🧠 <b>认知解读</b>：宗教词汇的世俗化程度，中日不同步。日语倾向把一切大词拽回日常（邪魔、我慢、有難い）；
+中文更容易把它们留在典籍与仪式层。所以对汉字词要保持「双寄存器」阅读：<b>典籍层与日常层分别查证</b>。</div>
+<div class="hits" data-w="邪魔"></div>
+</div>
+
+<div class="card pair" id="p-kufuu">
+<h2>⑬ 工夫 <span class="rd">くふう</span><span class="axis">量→質：時間の投入→知恵のしぼり出し</span></h2>
+<div class="two">
+<div class="side cn"><h3>中文「工夫」</h3><p>时间、精力（下工夫即肯花时间）；另「功夫」=武术/本领（另一词）。</p>
+<div class="ex">没工夫・下工夫</div></div>
+<div class="side jp"><h3>日本語「工夫」</h3><p>动脑筋、想办法、巧思。</p>
+<div class="ex">工夫を凝らす／工夫次第／水やりの工夫</div></div>
+</div>
+<div class="shift">認知漂移：<b>投入量（时间）→ 投入方式（智慧）</b>。中文问你「有没有时间」，日语问你「有没有主意」。</div>
+<div class="theater">
+<span class="say">中文脑：<span class="bad">「工夫が足りない」＝时间不够？</span></span>
+<span class="say">日语实际：<span class="good">「办法下得不够/不够巧」</span>。</span>
+<span class="say">想说没时间：<span class="good">「時間がない／手が回らない」</span>。</span>
+</div>
+<div class="deep">🧠 <b>认知解读</b>：伪友并不都来自语义漂移，也来自<b>同一字形的分工重画</b>：中文把「工+夫」算作劳动时间的单位，日语把它算作心力的单位。
+碰到「抽象名词」，先问它在对方语言里回答的是 <b>how much</b> 还是 <b>how</b>。</div>
+<div class="hits" data-w="工夫"></div>
+</div>
+
+<div class="group"><h2>E. 動作と能力——方向が反転する語</h2></div>
+
+<div class="card pair" id="p-jozu">
+<h2>⑭ 上手／下手 <span class="rd">じょうず／へた</span><span class="axis">方向反転：動作の開始→能力の高低</span></h2>
+<div class="two">
+<div class="side cn"><h3>中文「上手/下手」</h3><p>书面/古典：动手、着手开始（「无从下手」「上手晚了」）。</p>
+<div class="ex">无从下手・下手太晚</div></div>
+<div class="side jp"><h3>日本語「上手/下手」</h3><p>擅长／不擅长；另有读法 うわて（占上风）。</p>
+<div class="ex">料理が上手／歌が下手／上手に説明する／一枚上手</div></div>
+</div>
+<div class="shift">認知漂移：<b>“开始做”（时间轴上的起点）→“做得好不好”（能力轴上的高低）</b>。同形词从动作侧滑到了评价侧。</div>
+<div class="theater">
+<span class="say">日本朋友夸你 <span class="good">「日本語が上手ですね」</span>——是<span class="good">「你日语真好」</span>，别理解成「你开始学日语了」。</span>
+<span class="say">想表达「无从下手」：<span class="good">「どこから手をつけていいか分からない」</span>。</span>
+</div>
+<div class="deep">🧠 <b>认知解读</b>：「上/下」本是空间方位，中文用它表动作的起落，日语用它表能力的高下——
+空间隐喻的映射方向不同，结果同形反读。注意日语的「上手」是社交性的称赞模板（常含客气成分），
+听的时候要按<b>寒暄语</b>而非评价语解码。</div>
+<div class="hits" data-w="上手"></div>
+</div>
+
+<div class="card pair" id="p-benkyou">
+<h2>⑮ 勉強 <span class="rd">べんきょう</span><span class="axis">三段漂移：心理抵抗→学習→商談譲歩</span></h2>
+<div class="two">
+<div class="side cn"><h3>中文「勉强」</h3><p>不情愿、将就、硬撑（心理抵抗）。</p>
+<div class="ex">勉强答应・勉勉强强・别勉强自己</div></div>
+<div class="side jp"><h3>日本語「勉強」</h3><p>①学习 ②<b>便宜一点、让价</b>（商谈） ③勉強になる＝有收获。</p>
+<div class="ex">日本語を勉強する／少し勉強してくれませんか／勉強になります</div></div>
+</div>
+<div class="shift">認知漂移：中文停在「不乐意」；日语把它推到「下功夫学习」，再漂到「价格上的让步」——
+<b>从心理抵抗一路走到利益让渡</b>，几乎绕了一个圈。</div>
+<div class="theater">
+<span class="say">日本店员/客户说 <span class="good">「少し勉強させていただきます」</span>＝<span class="good">「给您便宜一点」</span>，与学习无关。</span>
+<span class="say">「勉強になります」＝<span class="good">「受教了/很有收获」</span>，是谦虚的社交辞令。</span>
+</div>
+<div class="deep">🧠 <b>认知解读</b>：「勉強」是伪友中漂移链最长的一个：<b>勉强自己 → 用功 → 让利</b>。每次漂移都沿着「降低对方的负担」这一日语伦理轴。
+看懂这条轴，记忆链路就不必死背：<b>勉強＝为了让对方轻松，我这边出点血</b>（时间、心力，或价格）。</div>
+<div class="hits" data-w="勉強"></div>
+</div>
+
+<div class="card">
+<h2>🧭 まとめ——偽友詞チェックの四問</h2>
+<table>
+<tr><th>問い</th><th>見る場所</th><th>例</th></tr>
+<tr><td>① 軸は同じか</td><td>道徳軸か社会役割軸か</td><td>立場・迷惑</td></tr>
+<tr><td>② どの領域に置かれたか</td><td>公私・親密/客観の分割</td><td>対象 ⇄ 相手・質問</td></tr>
+<tr><td>③ 褒貶・方向は同じか</td><td>極性と方向の確認</td><td>真面目・得意・上手/下手</td></tr>
+<tr><td>④ 文雅層か日常層か</td><td>典籍語の世俗化程度</td><td>我慢・皮肉・邪魔・遠慮</td></tr>
+</table>
+<div class="warn">⚠️ <b>検品の流儀</b>：本図鑑の「認知漂移」は解釈であり、語源と同様に<b>ラベルを貼り違えない</b>こと。
+すべての語に共通層（漢籍・四字熟語）と日常層があり、両者は別人である——辞書で確認し、実例で検証する。
+N1 真題命中は<b>元データ（回次・問題・题号）のみ</b>を引用し、真题原文は暗号化サイト内でのみ復号閲覧できる。</div>
+</div>
+
+<div class="card qbox">
+<h2>🎯 偽友小測——どっちの意味？</h2>
+<div class="hint lead">全 12 問 · 選完即時解説 · スコア：<span class="score" id="score">0 / 0</span></div>
+<div id="quiz" style="margin-top:12px"></div>
+</div>
+
+<div class="card">
+<h2>🔗 連動</h2>
+<div class="links">
+<a href="https://syu-toutousai.github.io/jlpt-question-bank/" target="_blank" rel="noopener"><b>🔐 JLPT N1–N5 過去問データベース</b><span>本题鉴所有 N1 真題命中引用的出处（加密站，密码解锁）</span></a>
+<a href="https://syu-toutousai.github.io/wago-atlas/" target="_blank" rel="noopener"><b>🌊 和語アトラス</b><span>以和語维度覆盖 JLPT 的函数词・接続表現・オノマトペ</span></a>
+<a href="https://syu-toutousai.github.io/japanese-learning/" target="_blank" rel="noopener"><b>🏠 日本語课件集</b><span>文法・語彙・メタ認知课件索引</span></a>
+</div>
+</div>
+
+<footer>中日 偽友詞 ・ 認知のズレ図鑑 · 手写单文件 · 离线可用<br>
+真题命中仅引用元数据，原文遵循题库加密政策 · 個人学習用</footer>
+</main>
+
+<script>
+const HITS={"立場":["2010-07-reading-mid-56","2010-12-reading-mid-53","2010-12-reading-mid-54","2010-12-reading-mid-55","2011-07-reading-short-47","2011-12-reading-long-59","2011-12-reading-long-60","2011-12-reading-long-61","2011-12-reading-long-62","2012-12-grammar-choice-33","2012-12-reading-mid-50","2012-12-reading-mid-51","2012-12-reading-mid-52","2013-07-reading-mid-56","2013-07-reading-mid-57","2013-07-reading-mid-58","2013-12-reading-long-59","2013-12-reading-long-60","2013-12-reading-long-61","2013-12-reading-long-62","2013-12-reading-long-63","2013-12-reading-long-64","2014-12-reading-long-65","2014-12-reading-long-66","2014-12-reading-long-67","2014-12-reading-long-68","2015-07-reading-mid-57","2016-07-grammar-passage-41","2016-07-grammar-passage-42","2016-07-grammar-passage-43","2016-07-grammar-passage-44","2016-07-grammar-passage-45","2016-07-reading-long-63","2016-07-reading-long-64","2016-12-reading-mid-58","2017-12-reading-short-48","2020-12-reading-mid-57","2021-12-reading-long-58","2021-12-reading-long-59","2021-12-reading-long-60","2021-12-reading-long-61","2022-07-grammar-passage-41","2022-07-grammar-passage-42","2022-07-grammar-passage-43","2022-07-grammar-passage-44","2022-12-reading-long-57","2022-12-reading-long-58","2022-12-reading-long-59","2024-12-reading-long-57","2024-12-reading-long-58","2024-12-reading-long-59","2025-07-reading-mid-49","2025-07-reading-mid-50","2025-07-reading-mid-51","2025-07-reading-mid-52","2025-07-reading-mid-53","2025-07-reading-mid-54","2025-07-reading-mid-55","2025-07-reading-mid-56"],"対象":["2010-07-grammar-passage-41","2010-07-grammar-passage-42","2010-07-grammar-passage-43","2010-07-grammar-passage-44","2010-07-grammar-passage-45","2010-12-listening-point-03","2010-12-reading-long-70","2010-12-reading-long-71","2010-12-reading-mid-50","2011-12-reading-long-59","2011-12-reading-long-60","2011-12-reading-long-61","2011-12-reading-long-62","2011-12-reading-long-69","2011-12-reading-long-70","2012-07-listening-grammar-06","2012-07-reading-long-64","2012-07-reading-long-69","2012-07-reading-long-70","2012-07-reading-mid-56","2012-07-reading-mid-57","2012-07-reading-mid-58","2013-07-listening-grammar-04","2013-07-reading-short-49","2013-12-reading-long-69","2013-12-reading-long-70","2015-07-listening-point-05","2015-12-listening-point-06","2015-12-reading-long-63","2015-12-reading-long-64","2015-12-reading-long-65","2015-12-reading-long-66","2015-12-reading-long-67","2015-12-reading-long-68","2016-07-listening-point-04","2018-07-reading-long-63","2019-12-reading-long-66","2019-12-reading-short-46","2020-12-grammar-choice-28","2021-12-reading-long-58","2021-12-reading-long-59","2021-12-reading-long-60","2021-12-reading-long-61","2022-07-grammar-composition-37","2022-07-grammar-passage-41","2022-07-grammar-passage-42","2022-07-grammar-passage-43","2022-07-grammar-passage-44","2022-07-reading-long-58","2022-07-reading-long-59","2022-07-reading-long-60","2023-07-reading-long-65","2023-07-reading-long-66","2024-12-reading-long-64","2024-12-reading-long-65","2024-12-reading-long-66","2025-07-reading-long-65","2025-07-reading-long-66"],"検討":["2010-12-reading-mid-55","2010-12-vocab-paraphrase-18","2011-12-grammar-choice-27","2011-12-reading-short-46","2012-07-vocab-usage-25","2012-12-reading-long-59","2012-12-reading-long-60","2012-12-reading-long-61","2012-12-reading-long-62","2013-07-grammar-choice-29","2013-12-listening-point-06","2014-07-reading-long-64","2014-07-reading-mid-50","2014-07-reading-mid-51","2014-07-reading-mid-52","2014-12-listening-point-06","2014-12-reading-long-64","2015-07-reading-long-65","2015-07-reading-long-66","2015-07-reading-long-67","2015-07-reading-long-68","2016-07-listening-point-04","2019-07-reading-long-62","2019-07-reading-long-63","2019-12-listening-point-02","2019-12-vocab-paraphrase-19","2021-12-reading-long-62","2021-12-reading-long-63","2021-12-reading-long-64","2025-07-reading-long-65"],"遠慮":["2010-12-vocab-usage-23","2011-12-reading-long-65","2011-12-reading-long-66","2011-12-reading-long-67","2011-12-reading-long-68","2012-07-grammar-passage-41","2012-07-grammar-passage-42","2012-07-grammar-passage-43","2012-07-grammar-passage-44","2012-07-grammar-passage-45","2013-12-vocab-usage-22","2016-07-reading-long-63","2016-07-reading-long-64","2016-12-grammar-passage-41","2016-12-grammar-passage-42","2016-12-grammar-passage-43","2016-12-grammar-passage-44","2016-12-grammar-passage-45","2023-07-vocab-paraphrase-15"],"我慢":["2010-12-reading-long-59","2010-12-reading-long-60","2010-12-reading-long-61","2010-12-reading-long-62","2014-07-grammar-passage-41","2014-07-grammar-passage-42","2014-07-grammar-passage-43","2014-07-grammar-passage-44","2014-07-grammar-passage-45","2019-12-grammar-composition-38","2022-07-reading-mid-53","2023-07-vocab-paraphrase-16","2025-07-grammar-choice-26"],"迷惑":["2010-12-grammar-choice-26","2014-12-reading-short-47","2019-12-reading-short-46","2019-12-vocab-context-09","2022-12-vocab-usage-24"],"真面目":["2011-12-grammar-composition-36","2024-12-grammar-composition-37"],"皮肉":["2010-07-vocab-paraphrase-19","2013-12-reading-long-59","2013-12-reading-long-60","2013-12-reading-long-61","2013-12-reading-long-62"],"邪魔":["2012-07-reading-mid-53","2012-07-reading-mid-54","2012-07-reading-mid-55","2012-12-grammar-passage-41","2012-12-grammar-passage-42","2012-12-grammar-passage-43","2012-12-grammar-passage-44","2012-12-grammar-passage-45","2013-07-reading-long-63","2013-07-reading-long-64","2016-12-reading-mid-50","2019-07-reading-long-64","2019-07-reading-long-65","2019-07-reading-long-66","2019-07-reading-long-67","2021-12-reading-mid-49","2021-12-reading-mid-50","2021-12-reading-mid-51","2021-12-reading-mid-52","2021-12-reading-mid-53","2021-12-reading-mid-54","2021-12-reading-mid-55","2021-12-reading-mid-56","2021-12-reading-mid-57","2024-07-reading-mid-51","2024-07-reading-mid-52","2024-07-reading-mid-53","2024-07-reading-mid-54","2024-12-reading-long-62","2024-12-reading-long-63","2024-12-reading-long-64","2025-07-reading-long-57","2025-07-reading-long-58","2025-07-reading-long-59"],"用意":["2010-07-listening-point-03","2011-12-reading-mid-53","2011-12-reading-mid-54","2011-12-reading-mid-55","2012-07-listening-point-02","2012-07-reading-long-69","2012-07-reading-long-70","2012-12-reading-long-69","2012-12-reading-long-70","2014-07-reading-long-69","2014-07-reading-long-70","2014-12-vocab-paraphrase-16","2016-07-reading-mid-50","2016-07-reading-mid-51","2016-07-reading-mid-52","2022-12-vocab-paraphrase-14","2023-07-reading-mid-55","2023-07-reading-mid-56","2024-07-vocab-paraphrase-16","2024-12-reading-short-46","2024-12-reading-short-47","2024-12-reading-short-48"],"工夫":["2012-07-reading-mid-53","2012-07-reading-mid-54","2012-07-reading-mid-55","2012-12-reading-long-65","2012-12-reading-long-66","2012-12-reading-long-67","2012-12-reading-long-68","2013-12-reading-long-65","2013-12-reading-long-66","2013-12-reading-long-67","2013-12-reading-long-68","2013-12-reading-mid-53","2013-12-reading-mid-54","2013-12-reading-mid-55","2015-07-reading-long-65","2015-07-reading-long-66","2015-07-reading-long-67","2015-07-reading-long-68","2016-07-listening-grammar-01","2016-07-reading-long-65","2016-07-reading-long-66","2016-07-reading-long-67","2016-07-reading-long-68","2018-12-vocab-context-08","2021-12-reading-mid-49","2021-12-reading-mid-50","2021-12-reading-mid-51","2021-12-reading-mid-52","2021-12-reading-mid-53","2021-12-reading-mid-54","2021-12-reading-mid-55","2021-12-reading-mid-56","2021-12-reading-mid-57","2024-12-reading-long-60","2024-12-reading-long-61","2025-07-grammar-passage-41","2025-07-grammar-passage-42","2025-07-grammar-passage-43","2025-07-grammar-passage-44"],"上手":["2010-07-reading-mid-50","2010-07-reading-mid-51","2010-07-reading-mid-52","2011-12-reading-short-46","2012-12-grammar-passage-41","2012-12-grammar-passage-42","2012-12-grammar-passage-43","2012-12-grammar-passage-44","2012-12-grammar-passage-45","2013-12-vocab-usage-22","2016-12-reading-long-63","2016-12-reading-long-64","2016-12-reading-mid-51","2016-12-reading-mid-53","2016-12-reading-mid-54","2016-12-reading-mid-55","2016-12-reading-mid-56","2016-12-reading-mid-57","2016-12-reading-mid-58","2018-07-reading-long-64","2023-07-reading-mid-55","2023-07-reading-mid-56","2024-07-reading-mid-53","2024-07-reading-mid-54","2024-12-reading-long-57","2024-12-reading-long-58","2024-12-reading-long-59","2024-12-reading-mid-49","2024-12-reading-mid-50","2024-12-reading-mid-51","2024-12-reading-mid-52","2024-12-reading-mid-53","2024-12-reading-mid-54","2024-12-reading-mid-55","2024-12-reading-mid-56","2025-07-grammar-passage-41","2025-07-grammar-passage-42","2025-07-grammar-passage-43","2025-07-grammar-passage-44"],"下手":["2012-07-grammar-passage-41","2012-07-grammar-passage-42","2012-07-grammar-passage-43","2012-07-grammar-passage-44","2012-07-grammar-passage-45"],"勉強":["2010-07-listening-grammar-01","2010-07-reading-mid-50","2010-07-reading-mid-51","2010-07-reading-mid-52","2010-12-reading-long-70","2010-12-reading-long-71","2011-07-reading-long-59","2011-07-reading-long-60","2011-07-reading-long-61","2011-07-reading-long-62","2011-07-reading-long-65","2011-07-reading-long-66","2011-07-reading-long-67","2011-07-reading-long-68","2012-07-reading-long-69","2012-07-reading-long-70","2012-12-grammar-composition-36","2012-12-reading-long-69","2012-12-reading-mid-50","2012-12-reading-mid-51","2012-12-reading-mid-52","2013-07-grammar-choice-32","2014-07-reading-long-63","2014-07-reading-long-64","2014-12-vocab-usage-23","2015-07-grammar-passage-41","2015-07-grammar-passage-42","2015-07-grammar-passage-43","2015-07-grammar-passage-44","2015-07-grammar-passage-45","2017-12-grammar-choice-30","2017-12-vocab-usage-22","2018-07-listening-grammar-03","2020-12-vocab-context-10","2021-12-listening-grammar-02","2021-12-vocab-usage-24","2022-12-reading-long-60","2022-12-reading-long-61","2023-07-reading-mid-49","2023-07-reading-mid-50","2023-07-reading-mid-51","2023-07-reading-mid-52","2023-07-reading-mid-53","2023-07-reading-mid-54","2023-07-reading-mid-55","2023-07-reading-mid-56","2024-07-reading-long-57","2024-07-reading-long-58","2024-07-reading-long-59","2024-07-vocab-usage-25","2024-12-reading-long-57","2024-12-reading-long-58","2024-12-reading-long-59","2025-07-reading-long-62","2025-07-reading-long-63","2025-07-reading-long-64"],"質問":["2010-07-listening-implication-03","2010-07-listening-implication-04","2010-07-vocab-context-08","2010-12-listening-implication-03","2010-12-listening-implication-04","2011-07-grammar-choice-29","2011-07-listening-implication-03","2011-07-listening-implication-04","2011-07-listening-point-03","2011-12-listening-implication-03","2011-12-listening-implication-04","2012-07-listening-implication-03","2012-07-listening-implication-04","2012-07-reading-long-65","2012-07-reading-long-66","2012-07-reading-long-67","2012-07-reading-long-68","2012-07-vocab-paraphrase-15","2012-12-listening-implication-03","2012-12-listening-implication-04","2012-12-listening-point-04","2013-07-listening-implication-03","2013-07-listening-implication-04","2013-12-grammar-passage-41","2013-12-grammar-passage-42","2013-12-grammar-passage-43","2013-12-grammar-passage-44","2013-12-grammar-passage-45","2013-12-listening-implication-03","2013-12-listening-implication-04","2014-07-listening-implication-03","2014-07-listening-implication-04","2014-07-reading-short-46","2014-12-listening-implication-03","2014-12-listening-implication-04","2015-07-listening-implication-03","2015-07-listening-implication-04","2015-07-reading-long-70","2015-07-vocab-paraphrase-16","2015-12-listening-implication-03","2015-12-listening-implication-04","2016-07-listening-implication-03","2016-07-listening-implication-04","2016-07-listening-point-03","2016-07-reading-long-63","2016-07-reading-long-64","2016-12-grammar-choice-30","2016-12-listening-implication-03","2016-12-listening-implication-04","2017-12-listening-implication-03","2017-12-listening-implication-04","2018-07-listening-implication-03","2018-07-listening-implication-04","2018-12-listening-grammar-05","2018-12-listening-implication-03","2018-12-listening-implication-04","2019-07-listening-point-06","2019-12-listening-implication-03","2019-12-listening-implication-04","2020-12-listening-implication-02","2020-12-listening-implication-03","2021-12-listening-implication-02","2021-12-listening-implication-03","2022-07-listening-implication-02","2022-07-listening-implication-03","2022-12-listening-implication-02","2022-12-listening-implication-03","2022-12-reading-mid-53","2022-12-reading-mid-54","2022-12-reading-mid-55","2022-12-reading-mid-56","2022-12-reading-short-47","2022-12-reading-short-48","2023-07-listening-implication-02","2023-07-listening-implication-03","2023-07-reading-long-60","2023-07-reading-long-61","2024-07-grammar-choice-35","2024-07-listening-implication-02","2024-07-listening-implication-03"],"得意":["2010-07-reading-long-59","2010-07-reading-long-60","2010-07-reading-long-61","2010-07-reading-long-62","2018-12-listening-grammar-06","2019-07-grammar-passage-41","2019-07-grammar-passage-42","2019-07-grammar-passage-43","2019-07-grammar-passage-44","2019-07-grammar-passage-45","2019-12-grammar-passage-41","2019-12-grammar-passage-42","2019-12-grammar-passage-43","2019-12-grammar-passage-44","2019-12-grammar-passage-45"]};
+const LEVEL_LABEL={n1:'N1'};
+
+function renderHits(){
+  document.querySelectorAll('.hits').forEach(box=>{
+    const w=box.dataset.w, list=HITS[w]||[];
+    if(!list.length){box.textContent='N1 真題命中：无';return;}
+    const years={};
+    list.forEach(id=>{const y=id.slice(0,4);years[y]=(years[y]||0)+1;});
+    const max=Math.max(...Object.values(years));
+    let h=`<b>N1 真題命中：${list.length} 題</b>（点击题号跳加密站对应题）<div>`;
+    Object.keys(years).sort().forEach(y=>{
+      h+=`<div class="barrow"><span class="yr">${y}</span>`+
+         `<span class="bar" style="width:${Math.round(years[y]/max*180)}px" title="${years[y]} 題"></span>`+
+         `<span class="yr">${years[y]}</span></div>`;
+    });
+    h+='</div><div style="margin-top:6px">';
+    list.forEach(id=>{
+      h+=`<a class="ref" href="https://syu-toutousai.github.io/jlpt-question-bank/#q=${id}" target="_blank" rel="noopener">${id}</a>`;
+    });
+    box.innerHTML=h+'</div>';
+  });
+}
+renderHits();
+
+const QS=[
+ ["日本上司说「検討します」。最接近的意思是？",["会研究评估（可能婉拒）","承认错误、准备检讨","立场上反对"],0,
+  "検討＝可行性评估（实务轴）。中文「检讨」是自我批评（道德轴）。"],
+ ["「彼女は私の対象です。」听起来最像什么？",["浪漫告白","她是我的实验/调查目标","非常自然的日语"],1,
+  "日语「対象」只指客观目标；恋爱伴侣用「恋人・彼女」，人际相手用「相手」。"],
+ ["「立場上できません」的意思是？",["原则上我反对","因职位/身份限制，我不能做","我没有立场"],1,
+  "立場＝社会角色带来的行为边界，不是道德立场。"],
+ ["「遠慮なくどうぞ」＝？",["请深谋远虑","别客气，请","请顾虑一下"],1,
+  "日语「遠慮」是客气/自制。「深谋远虑」属于汉籍共用层的另一个注册。"],
+ ["日语「迷惑」的核心是？",["认知上的困惑","给他人添麻烦","相互误解"],1,
+  "迷惑をかける＝添麻烦。中文的「困惑」日语说「戸惑う・混乱する」。"],
+ ["「真面目な人」＝？",["露出了真面目的人","认真踏实的人","两面派"],1,
+  "日语「真面目」是褒义（认真）。中文的「真面目」多为贬义（真面目被揭穿）。"],
+ ["「皮肉を言う」＝？",["说肉麻的话","说讽刺/挖苦的话","抱怨身体"],1,
+  "「皮肉」在日语是言语行为＝讽刺。诸说之一认为源自禅语「皮肉骨髄」。"],
+ ["「お邪魔します」＝？",["恶魔来了","打扰了（进门前寒暄）","驱魔仪式"],1,
+  "「邪魔」已日常化为妨碍/打扰，与中文的妖魔鬼怪不同。"],
+ ["日语「用意」的核心是？",["意图、目的","准备、备好","用心良苦"],1,
+  "「意図」才是意图；「用意する」＝准备。"],
+ ["日语「工夫」的核心是？",["投入时间","动脑筋、想办法","武术功夫"],1,
+  "中文工夫＝时间；日语工夫＝巧思。「没时间」是「時間がない」。"],
+ ["「日本語が上手ですね」＝？",["你开始学日语了","你日语说得真好","你日语上手（动手）了"],1,
+  "日语「上手」是能力评价；中文「上手」是动作开始。"],
+ ["「勉強になります」＝？",["学得很勉强","受教了、很有收获","要降价"],1,
+  "「勉強」漂移链：勉强→用功→（商谈）让价。此处是「有收获」的社交辞令。"]
+];
+let qi=0, ok=0;
+function render(){
+  const box=document.getElementById("quiz");
+  if(qi>=QS.length){
+    box.innerHTML="<div style='font-size:18px;font-weight:700'>🏆 "+ok+" / "+QS.length+
+      "　"+(ok===QS.length?"完璧！偽友の目ができました":ok>=9?"かなり良い！軸のズレが見えています":"四問（軸・領域・極性・レジスター）に戻って再挑戦")+"</div>"+
+      "<button class='opt' style='margin-top:12px' onclick='qi=0;ok=0;render()'>もう一度</button>";
+    document.getElementById("score").textContent=ok+" / "+QS.length;
+    return;
+  }
+  const q=QS[qi];
+  box.innerHTML="<div class='q'>"+q[0]+"</div>"+
+    q[1].map((t,i)=>"<button class='opt' data-i='"+i+"' onclick='pick(this)'>"+t+"</button>").join("")+
+    "<div class='fb' id='fb'></div>";
+  document.getElementById("score").textContent=ok+" / "+QS.length;
+}
+function pick(btn){
+  const q=QS[qi], chosen=Number(btn.dataset.i);
+  document.querySelectorAll("#quiz .opt").forEach(b=>{b.disabled=true;if(Number(b.dataset.i)===q[2])b.classList.add("right");});
+  if(chosen!==q[2])btn.classList.add("wrong"); else ok++;
+  const fb=document.getElementById("fb");
+  fb.className="fb "+(chosen===q[2]?"ok":"ng");
+  fb.innerHTML=(chosen===q[2]?"⭕ 正解！":"❌ 正解是「"+q[1][q[2]]+"」")+"　"+q[3];
+  document.getElementById("score").textContent=ok+" / "+(qi+1);
+  qi++;
+  const nb=document.createElement("button");
+  nb.className="opt"; nb.style.display="block"; nb.style.marginTop="10px";
+  nb.textContent=qi>=QS.length?"结果を見る →":"次の問題 →";
+  nb.onclick=render;
+  fb.after(nb);
+}
+render();
+</script>
+</body>
+</html>
